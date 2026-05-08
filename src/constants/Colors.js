@@ -1,5 +1,5 @@
 export default {
-  dark: {
+  dark1: {
     bgdark: 'hsl(229 52% 2%)',
     bg: 'hsl(225 34% 5%)',
     bglight: 'hsl(225 20% 9%)',
@@ -15,7 +15,7 @@ export default {
     success: 'hsl(146 17% 59%)',
     info: 'hsl(217 28% 65%)',
   },
-  light: {
+  light1: {
     bgdark: 'hsl(224 31% 91%)',
     bg: 'hsl(224 73% 96%)',
     bglight: 'hsl(224 100% 100%)',
@@ -30,5 +30,38 @@ export default {
     warning: 'hsl(52 23% 34%)',
     success: 'hsl(147 19% 36%)',
     info: 'hsl(217 22% 41%)',
+  },
+  //das neue System
+  dark: {
+    bgdark: 'hsl(244 100% 5%)',
+    bg: 'hsl(238 77% 8%)',
+    bglight: 'hsl(233 59% 13%)',
+    text: 'hsl(228 100% 100%)',
+    textmuted: 'hsl(228 75% 78%)',
+    highlight: 'hsl(231 39% 49%)',
+    border: 'hsl(233 47% 37%)',
+    bordermuted: 'hsl(237 59% 27%)',
+    primary: 'hsl(229 100% 80%)',
+    secondary: 'hsl(47 58% 53%)',
+    danger: 'hsl(8 68% 66%)',
+    warning: 'hsl(52 59% 44%)',
+    success: 'hsl(152 45% 49%)',
+    info: 'hsl(217 80% 68%)',
+  },
+  light: {
+    bgdark: 'hsl(227 100% 95%)',
+    bg: 'hsl(227 100% 100%)',
+    bglight: 'hsl(227 100% 100%)',
+    text: 'hsl(254 100% 11%)',
+    textmuted: 'hsl(233 47% 37%)',
+    highlight: 'hsl(228 100% 100%)',
+    border: 'hsl(230 51% 60%)',
+    bordermuted: 'hsl(229 77% 73%)',
+    primary: 'hsl(233 47% 37%)',
+    secondary: 'hsl(47 100% 11%)',
+    danger: 'hsl(7 51% 41%)',
+    warning: 'hsl(53 100% 15%)',
+    success: 'hsl(161 100% 17%)',
+    info: 'hsl(217 54% 44%)',
   },
 };
