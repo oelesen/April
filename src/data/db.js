@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-
+//
 const db = SQLite.openDatabaseAsync('datenbank.db');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const init = async () => {
@@ -16,7 +16,7 @@ export const init = async () => {
     }
 
     db.transaction((tx) => {
-      //console.log('Starting transaction');
+      console.log('Starting transaction');
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS datenbank (id INTEGER PRIMARY KEY NOT NULL, ort TEXT NOT NULL, grau TEXT NOT NULL, gruen TEXT NOT NULL, thema TEXT NOT NULL);',
         [],
