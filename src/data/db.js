@@ -1,105 +1,90 @@
 import * as SQLite from 'expo-sqlite';
-//
-const db = SQLite.openDatabaseAsync('datenbank.db');
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// We create a variable to hold the database instance
+let db = null;
+
+// This helper ensures we always have the database instance ready
+const getDb = async () => {
+  if (!db) {
+    db = await SQLite.openDatabaseAsync('datenbank.db');
+  }
+  return db;
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const init = async () => {
-  //console.log('SQLite:', SQLite);
+  const database = await getDb();
+  try {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ACHTUNG: Nur zum Fixen! Löscht die alte Tabelle und erstellt sie neu.
+    // Das löscht alle alten Testdaten auf dem Handy!
+    //braucht nur aktiviert zu werden, wenn Probleme mit alter, geänderter Datenbank aufgetreten sind
+    //await database.execAsync('DROP TABLE IF EXISTS datenbank;');
 
-  //console.log('Database object:', db);
-  const promise = new Promise((resolve, reject) => {
-    if (!db) {
-      console.error('Failed to open database');
-      reject(new Error('Failed again to open database'));
-      return;
-    } else {
-      //console.log('Database gibts');
-    }
-
-    db.transaction((tx) => {
-      console.log('Starting transaction');
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS datenbank (id INTEGER PRIMARY KEY NOT NULL, ort TEXT NOT NULL, grau TEXT NOT NULL, gruen TEXT NOT NULL, thema TEXT NOT NULL);',
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          reject(err);
-        },
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // execAsync is used for one-off commands like creating tables
+    await database.execAsync(`
+      CREATE TABLE IF NOT EXISTS datenbank (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        ort TEXT NOT NULL, 
+        grau TEXT NOT NULL, 
+        gruen TEXT NOT NULL 
       );
-    });
-  });
-  return promise;
+    `);
+    console.log('Database initialized successfully');
+  } catch (error) {
+    console.error('Error initializing database:', error);
+    throw error;
+  }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const insertDatenbank = (ort, grau, gruen, thema) => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `INSERT INTO datenbank (ort,grau,gruen, thema) VALUES (?, ?, ?, ?);`,
-        [ort, grau, gruen, thema],
-        (_, result) => {
-          resolve(result);
-        },
-        (_, err) => {
-          reject(err);
-        },
-      );
-    });
-  });
-  return promise;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const insertDatenbank = async (ort, grau, gruen) => {
+  const database = await getDb();
+  try {
+    // runAsync is used for INSERT, UPDATE, DELETE
+    const result = await database.runAsync(
+      'INSERT INTO datenbank (ort, grau, gruen) VALUES (?, ?, ?);',
+      [ort, grau, gruen],
+    );
+    return result;
+  } catch (error) {
+    console.error('Insert error:', error);
+    throw error;
+  }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const fetchDatenbank = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT * FROM datenbank where id = 1',
-        [],
-        (_, result) => {
-          resolve(result);
-        },
-        (_, err) => {
-          reject(err);
-        },
-      );
-    });
-  });
-  return promise;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const fetchDatenbank = async () => {
+  const database = await getDb();
+  try {
+    // getAllAsync returns an array of all rows found
+    const allRows = await database.getAllAsync('SELECT * FROM datenbank');
+    return allRows;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const deleteDatenbank = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'DELETE FROM datenbank where id = 1',
-        [],
-        (_, result) => {
-          resolve(result);
-        },
-        (_, err) => {
-          reject(err);
-        },
-      );
-    });
-  });
-  return promise;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const deleteDatenbank = async () => {
+  const database = await getDb();
+  try {
+    const result = await database.runAsync('DELETE FROM datenbank');
+    return result;
+  } catch (error) {
+    console.error('Delete error:', error);
+    throw error;
+  }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const updateDatenbank = (ort, grau, gruen, thema) => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'UPDATE datenbank SET ort = ? , grau = ?, gruen = ?, thema = ? WHERE id = ?',
-        [ort, grau, gruen, thema, 1],
-        (_, result) => {
-          resolve(result);
-        },
-        (_, err) => {
-          reject(err);
-        },
-      );
-    });
-  });
-  return promise;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const updateDatenbank = async (ort, grau, gruen) => {
+  const database = await getDb();
+  try {
+    const result = await database.runAsync(
+      'UPDATE datenbank SET ort = ?, grau = ?, gruen = ? WHERE id = (SELECT id FROM datenbank LIMIT 1)',
+      [ort, grau, gruen],
+    );
+    return result;
+  } catch (error) {
+    console.error('Update error:', error);
+    throw error;
+  }
 };

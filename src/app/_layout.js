@@ -1,95 +1,128 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar'; // Importiere StatusBar für die Icon-Farben
 import { useEffect } from 'react';
-import Colors from '../constants/Colors';
 import { fetchDatenbank, init, insertDatenbank } from '../data/db';
+import { ThemeProvider, useTheme } from '../theme/ThemeContext'; // Importiere unseren neuen Provider & Hook
 
+/**
+ * ////////////////////////////////////////////////////////////////////////////////////////////////
+ * APP WRAPPER KOMPONENTE
+ * Diese Komponente ist notwendig, weil man den 'useTheme' Hook
+ * NUR innerhalb eines 'ThemeProvider' verwenden darf.
+ * Wir ziehen sie aus dem RootLayout heraus, um Zugriff auf die Farben zu haben.
+ */
+function AppWrapper() {
+  // Wir holen uns die aktuellen Farben und den Dark-Mode-Status aus unserem Context
+  const { colors, isDark } = useTheme();
+
+  return (
+    <>
+      {/* Die StatusBar passt ihre Icons (Uhrzeit, Akku) automatisch an das Theme an */}
+      <StatusBar
+        style={isDark ? 'light' : 'dark'}
+        // Wir fügen 'animated' hinzu, damit der Übergang nicht so abrupt geschieht
+        animated={true}
+        // Wir stellen sicher, dass die Transparenz korrekt ist, damit die Icons nicht "verschwinden"
+        translucent={true}
+        backgroundColor="transparent"
+      />
+
+      <Stack
+        screenOptions={{
+          // Hier nutzen wir nun die dynamischen Farben aus dem Context statt Colors[thema]
+          headerStyle: {
+            backgroundColor: colors.bgdark, // Nutzt die bgdark Farbe aus deinem Colors-Objekt
+          },
+          headerTintColor: colors.text, // Nutzt die Textfarbe aus deinem Colors-Objekt
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'roboto-bold',
+            fontSize: 14,
+            fontWeight: 'bold',
+          },
+          // WICHTIG: Auch der Hintergrund der Screens sollte dynamisch sein
+          contentStyle: {
+            backgroundColor: colors.bg, // Nutzt die bg Farbe aus deinem Colors-Objekt
+          },
+        }}
+      >
+        <Stack.Screen name="index" options={{ title: 'Home' }} />
+      </Stack>
+    </>
+  );
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * ROOT LAYOUT
+ * Dies ist der eigentliche Entry-Point. Hier kümmern wir uns um
+ * Fonts, Datenbank und die Bereitstellung des ThemeProviders.
+ */
 export default function RootLayout() {
-  //const router = useRouter();
-  const thema = 'light'; // Set the theme to 'light' (you can change this to 'dark' if needed)
-
-  ////////////////////////////////////////////////////////////////
+  /////////////////////////////
+  // 1. FONTS LADEN
+  /////////////////////////////
   const [fontsLoaded] = useFonts({
-    // Define your custom fonts here
     'roboto-regular': require('../assets/fonts/Roboto-Regular.ttf'),
     'roboto-bold': require('../assets/fonts/Roboto-Bold.ttf'),
   });
-  ///////////////////////////////////////////////////////////////////
+
+  /////////////////////////////
+  // 2. SPLASH SCREEN LOGIK
+  /////////////////////////////
   useEffect(() => {
     if (fontsLoaded) {
-      // Hide the splash screen after the fonts have loaded and the
-      // UI is ready.
+      // Sobald die Fonts geladen sind, blenden wir den Splash Screen aus
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-  ////////////////////////////////////////////////////////////////
-  //datenbank wird initialisiert
-  init()
-    .then(() => {
-      console.log('Datenbank wurde initialisiert');
-      async function laden() {
-        const dbResult = await fetchDatenbank();
-        //console.log(dbResult);
-        //Falls die Datenbank leer ist, werden die Anfangswerte gesetzt
-        if (dbResult.rows.length === 0) {
-          console.log('nix drin');
-          insertDatenbank('Tinnum', 'grau2', 'gruen4', 'light');
-        }
-        //console.log(dbResult);
-        let eins = dbResult.rows._array[0].ort;
-        let zwei = dbResult.rows._array[0].grau;
-        let drei = dbResult.rows._array[0].gruen;
-        let vier = dbResult.rows._array[0].thema;
-        //setMuell([eins, zwei, drei]);
-        console.log('Ende laden ' + eins, zwei, drei, vier);
-      }
-      laden();
-      //mal sehen
-    })
-    .catch((error) => {
-      console.log('Datenbank nicht initialisiert');
-      console.log(error);
-    });
 
-  ////////////////////////////////////////////////////////////////
+  /////////////////////////////
+  // 3. DATENBANK SETUP
+  /////////////////////////////
   useEffect(() => {
-    const initializeDatabase = async () => {
+    const setup = async () => {
       try {
+        // Datenbank initialisieren
         await init();
-        console.log('Database initialized successfully');
-      } catch (err) {
-        console.log('Failed to initialize database:', err);
+        console.log('Database is ready!');
+
+        // Prüfen, ob Daten vorhanden sind
+        let dbResult = await fetchDatenbank();
+        console.log('Daten in der DB:', dbResult);
+
+        // Falls leer: Erst einfügen
+        if (dbResult.length === 0) {
+          console.log('Datenbank ist leer, setze Anfangswerte...');
+          // Hier fügst du deine Standarddaten ein
+          await insertDatenbank('Tinnum', 'grau2', 'gruen4');
+          console.log('Anfangswerte erfolgreich eingefügt.');
+
+          // Erneut laden, damit die Variable dbResult aktuell ist
+          dbResult = await fetchDatenbank();
+        }
+      } catch (error) {
+        console.error('Fehler beim Setup der Datenbank:', error);
       }
     };
-
-    initializeDatabase();
+    setup();
   }, []);
 
-  ////////////////////////////////////////////////////////////////
+  /////////////////////////////
+  // 4. RENDERING LOGIK
+  /////////////////////////////
 
-  // Prevent rendering until the font has loaded
+  // Verhindere das Rendern, solange die Fonts noch nicht bereit sind
   if (!fontsLoaded) {
     return null;
   }
-  ////////////////////////////////////////////////////////////////
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors[thema].bgdark,
-        },
-        headerTintColor: Colors[thema].text,
-        headerTitleAlign: 'center',
-        headerTitleStyle: {
-          fontFamily: 'roboto-bold',
-          fontSize: 14,
-          fontWeight: 'bold',
-        },
-      }}
-    >
-      <Stack.Screen name="index" options={{ title: 'Home' }} />
-    </Stack>
+    // Wir umschließen die gesamte App mit dem ThemeProvider.
+    // Dadurch hat die AppWrapper Komponente Zugriff auf den Theme-Status.
+    <ThemeProvider>
+      <AppWrapper />
+    </ThemeProvider>
   );
 }
