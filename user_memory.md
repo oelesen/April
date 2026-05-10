@@ -1,0 +1,1 @@
+I must ensure that any skills or instruction sets written are highly formalized, structured, and follow a clear, directive convention rather than a general markdown format, especially when the goal is for the AI to adopt it as a core "System Prompt" or skill.
