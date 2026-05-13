@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // WICHTIG: Importiere den Hook aus deinem ThemeContext
 import { useTheme } from '../theme/ThemeContext';

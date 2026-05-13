@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isCancel } from 'axios';
 import { useEffect, useState } from 'react';
 
 /**
@@ -15,6 +15,8 @@ const useFetch = (url) => {
 
   // useEffect wird ausgeführt, wenn die Komponente gemountet wird oder die 'url' ändert.
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
       try {
         // API-Aufruf mit axios. Cache-Header sind gesetzt, um sicherzustellen,
@@ -25,21 +27,32 @@ const useFetch = (url) => {
             Pragma: 'no-cache', // Älterer Cache-Header
             Expires: '0', // Erzwingt sofortige Aktualisierung
           },
+          signal: controller.signal,
         });
         setData(result.data); // Speichert die geladenen Daten
       } catch (error) {
+        if (isCancel(error)) {
+          // Request wurde abgebrochen, keine Fehlerzustandsaktualisierung nötig
+          return;
+        }
         setError(error); // Speichert den Fehler bei einem API-Fehler
       } finally {
         setLoading(false); // Setzt den Ladezustand immer auf false
       }
     };
     fetchData();
+
+    return () => {
+      controller.abort();
+    };
   }, [url]); // Dieser Effekt läuft jedes Mal, wenn die 'url' ändert
 
   // refetch-Funktion ermöglicht es dem Benutzer, die Daten manuell zu aktualisieren.
   const refetch = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      // Erneuter API-Aufruf, um die Daten zu aktualisieren
+      // Erneuter API-Aufbr...
       const result = await axios.get(url, {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -10,71 +11,129 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import useFetch from '../hooks/useFetch';
+// Import der benötigten Funktionen aus date-fns für die Zeitformatierung
+import { format, fromUnixTime } from 'date-fns'; // Falls Pfad angepasst werden muss, sonst: 'date-fns'
+// Hinweis: Falls der Import oben fehlschlägt, nutze: import { format, fromUnixTime } from 'date-fns';
 import { useTheme } from '../theme/ThemeContext';
 
-// Korrekter Pfad zu deiner JSON-Datei
-import exchangeData from '../data/exchange_rate.json';
+// URL der externen JSON-Datei
+const EXCHANGE_RATE_URL = 'https://www.rundf.eu/wechselkurs/exchange_rate.json';
 
 const Wechselkurs = () => {
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
-  // Den Wechselkurs aus der JSON extrahieren
-  const exchangeRate = exchangeData.rates.DKK;
+  // Abruf der Daten über den useFetch Hook
+  const { data: exchangeData, loading, error } = useFetch(EXCHANGE_RATE_URL);
 
+  // Zustände für die Eingabewerte (Dänische Krone und Euro)
   const [dkkValue, setDdkValue] = useState('');
   const [eurValue, setEurValue] = useState('');
 
-  // Funktion: Von DKK zu EUR
+  // Der aktuelle Wechselkurs (Sicherer Zugriff auf das DKK-Objekt)
+  const exchangeRate = exchangeData?.rates?.DKK;
+
+  /**
+   * Hilfsfunktion: Formatiert den Unix-Timestamp aus den API-Daten.
+   * Wandelt die Sekunden in ein lesbares Format um: DD.MM.YYYY HH:mm
+   * @returns {string} Das formatierte Datum oder ein leerer String bei Fehler.
+   */
+  const formatTimestamp = () => {
+    // Wenn kein Timestamp vorhanden ist, brechen wir ab
+    if (!exchangeData?.timestamp) return '';
+
+    try {
+      // 1. fromUnixTime wandelt die Sekunden (Unix) in ein JS-Datum um
+      // 2. format erstellt den gewünschten String
+      return format(fromUnixTime(exchangeData.timestamp), 'dd.MM.yyyy HH:mm');
+    } catch (err) {
+      // Im Fehlerfall (z.B. ungültiges Format) wird nichts angezeigt
+      console.error('Fehler bei der Zeitformatierung:', err);
+      return '';
+    }
+  };
+
+  // --- LOGIK DER UMRECHNUNG ---
+
+  // Funktion: Wenn der DKK-Wert geändert wird -> berechne EUR
   const handleDdkChange = (text) => {
     setDdkValue(text);
-
+    // Ersetze Komma durch Punkt für die mathematische Berechnung
     const numericValue = parseFloat(text.replace(',', '.'));
 
     if (!isNaN(numericValue) && text !== '') {
-      const convertedEur = numericValue / exchangeRate;
-      setEurValue(convertedEur.toFixed(2).toString());
+      // EUR = DKK / Kurs
+      setEurValue((numericValue / exchangeRate).toFixed(2).toString());
     } else {
       setEurValue('');
     }
   };
 
-  // Funktion: Von EUR zu DKK
+  // Funktion: Wenn der EUR-Wert geändert wird -> berechne DKK
   const handleEurChange = (text) => {
     setEurValue(text);
     const numericValue = parseFloat(text.replace(',', '.'));
 
     if (!isNaN(numericValue) && text !== '') {
-      const convertedDkk = numericValue * exchangeRate;
-      setDdkValue(convertedDkk.toFixed(2).toString());
+      // DKK = EUR * Kurs
+      setDdkValue((numericValue * exchangeRate).toFixed(2).toString());
     } else {
-      setDdkValue('');
+      setEurValue('');
     }
   };
 
+  // --- RENDERING (UI) ---
+
+  // 1. Ladezustand: Zeige einen Spinner
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={{ color: colors.text, marginTop: 10 }}>
+          Lade Wechselkurs...
+        </Text>
+      </View>
+    );
+  }
+
+  // 2. Fehlerzustand: Zeige eine Fehlermeldung
+  if (error || !exchangeRate) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center' }]}>
+        <Text style={{ color: 'red', textAlign: 'center' }}>
+          Fehler beim Laden der Daten.
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    // 1. TouchableWithoutFeedback: Schließt das Keyboard beim Tippen auf den Hintergrund
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      {/* 2. KeyboardAvoidingView: Schiebt den Inhalt hoch, wenn das Keyboard erscheint */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.understanding === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        {/* 3. ScrollView: Erlaubt das Scrollen, wenn das Keyboard Platz wegnimmt */}
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           bounces={false}
         >
           <View style={styles.container}>
+            {/* Header mit Titel, aktuellem Kurs und Datum */}
             <View style={styles.headerContainer}>
               <Text style={styles.title}>Währungsrechner</Text>
               <Text style={styles.subtitle}>
                 Kurs: 1 EUR = {exchangeRate.toFixed(4)} DKK
               </Text>
+
+              {/* Anzeige des Datums (nur wenn Timestamp existiert) */}
+              {exchangeData?.timestamp && (
+                <Text style={styles.dateText}>Stand: {formatTimestamp()}</Text>
+              )}
             </View>
 
             <View style={styles.converterContainer}>
-              {/* Dänische Krone Feld */}
+              {/* Eingabefeld: Dänische Krone (DKK) */}
               <View style={styles.inputCard}>
                 <Text style={styles.flag}>🇩🇰</Text>
                 <View style={styles.inputField}>
@@ -90,7 +149,7 @@ const Wechselkurs = () => {
                 </View>
               </View>
 
-              {/* Trenner/Pfeil */}
+              {/* Trennelement: Pfeil zwischen den Währungen */}
               <View style={styles.separatorContainer}>
                 <View
                   style={[styles.line, { backgroundColor: colors.border }]}
@@ -101,7 +160,7 @@ const Wechselkurs = () => {
                 />
               </View>
 
-              {/* Euro Feld */}
+              {/* Eingabefeld: Euro (EUR) */}
               <View style={styles.inputCard}>
                 <Text style={styles.flag}>🇪🇺</Text>
                 <View style={styles.inputField}>
@@ -126,9 +185,11 @@ const Wechselkurs = () => {
 
 export default Wechselkurs;
 
+/**
+ * Styles Definition basierend auf dem Theme
+ */
 function createStyles(colors) {
   return StyleSheet.create({
-    // scrollContent sorgt dafür, dass der Inhalt mittig bleibt, wenn das Keyboard zu ist
     scrollContent: {
       flexGrow: 1,
       justifyContent: 'center',
@@ -152,6 +213,12 @@ function createStyles(colors) {
       fontSize: 14,
       color: colors.textmuted,
       marginTop: 8,
+    },
+    dateText: {
+      fontSize: 12,
+      color: colors.textmuted,
+      marginTop: 4,
+      fontStyle: 'italic',
     },
     converterContainer: {
       width: '100%',
@@ -208,24 +275,3 @@ function createStyles(colors) {
     },
   });
 }
-
-/*
-import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../theme/ThemeContext';
-
-const Wechselkurs = () => {
-  const { colors } = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View>
-      <Text>wechselkurse</Text>
-    </View>
-  );
-};
-
-export default Wechselkurs;
-
-function createStyles(colors) {
-  return StyleSheet.create({});
-}
-*/

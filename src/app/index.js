@@ -1,31 +1,44 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, View } from 'react-native';
 // WICHTIG: Importiere den Hook aus deinem ThemeContext um die Farben zu nutzen
 import Schalter from '../components/schalter';
 import { useTheme } from '../theme/ThemeContext';
 
 const Index = () => {
-  const { colors } = useTheme();
-  const styles = createStyles(colors);
+  const { colors, isDark } = useTheme();
 
+  const styles = createStyles(colors);
+  //////////////////////////////////////////////////////////////////////////////
+  //anhand von isDark wird das Hintergrundbild ausgewählt.
+  // Je nachdem, ob der Nutzer den Dark Mode aktiviert hat oder nicht
+  let hintergrundbild = isDark
+    ? require('../assets/images/Bilder/inselBgDark.png')
+    : require('../assets/images/Bilder/inselBgLight.png'); // Standardbild
+  ///////////////////////////////////////////////////////////////////////////////
   return (
-    <View style={styles.container}>
-      <View>
-        <Link href="/themenwahl" asChild>
-          <Pressable>
-            <Schalter beschriftung={'Themenwahl'} />
-          </Pressable>
-        </Link>
+    <ImageBackground
+      source={hintergrundbild}
+      style={styles.bildcontainer}
+      resizeMode="contain"
+    >
+      <View style={styles.container}>
+        <View>
+          <Link href="/themenwahl" asChild>
+            <Pressable>
+              <Schalter beschriftung={'Themenwahl'} />
+            </Pressable>
+          </Link>
+        </View>
+        <View>
+          <Link href="/wechselkurs" asChild>
+            <Pressable>
+              <Schalter beschriftung={'Wechselkurs'} />
+            </Pressable>
+          </Link>
+        </View>
       </View>
-      <View>
-        <Link href="/wechselkurs" asChild>
-          <Pressable>
-            <Schalter beschriftung={'Wechselkurs'} />
-          </Pressable>
-        </Link>
-      </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -38,12 +51,17 @@ function createStyles(colors) {
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
-      backgroundColor: colors.bg, // Nutzt die Hintergrundfarbe aus dem Theme
+      //backgroundColor: colors.bg, // Nutzt die Hintergrundfarbe aus dem Theme
     },
     buttonText: {
       color: colors.text,
       fontSize: 16,
       fontWeight: 'bold',
+    },
+    bildcontainer: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: colors.bgdark, // Nutzt die bgdark Farbe aus dem Theme für den Hintergrund der Bildkomponente
     },
   });
 }
