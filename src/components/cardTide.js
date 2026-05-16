@@ -47,13 +47,33 @@ const CardTide = (props) => {
   let wota = format(new Date(props.datum), 'eeee', { locale: de });
   //console.log(datum + ' ' + wota + ' ' + wann);
 
-  //Zeitumstellung So 26.03.23 und So 29.10.2023 jew. 03:00 morgens
-  const anf = new Date('2026-03-30');
-  const end = new Date('2026-10-26');
-  //console.log(anf);
-  //console.log(end);
+  // Dynamische Berechnung der Sommerzeit (letzter Sonntag im März bis letzter Sonntag im Oktober)
+  const getDstPeriod = (date) => {
+    const year = date.getFullYear();
+
+    // Letzter Sonntag im März
+    const march31 = new Date(year, 2, 31);
+    let startDst = new Date(year, 2, 31);
+    while (startDst.getDay() !== 0) {
+      startDst.setDate(startDst.getDate() - 1);
+    }
+    // Zeitumstellung meist um 02:00/03:00 Uhr
+    startDst.setHours(3, 0, 0);
+
+    // Letzter Sonntag im Oktober
+    const oct31 = new Date(year, 9, 31);
+    let endDst = new Date(year, 9, 31);
+    while (endDst.getDay() !== 0) {
+      endDst.setDate(endDst.getDate() - 1);
+    }
+    endDst.setHours(3, 0, 0);
+
+    return { startDst, endDst };
+  };
+
+  const { startDst, endDst } = getDstPeriod(wann);
   let periode = 'winterzeit';
-  if (isWithinInterval(wann, { start: anf, end: end })) {
+  if (isWithinInterval(wann, { start: startDst, end: endDst })) {
     periode = 'sommerzeit';
   }
   //console.log(periode);

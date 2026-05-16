@@ -8,9 +8,8 @@ const Knopf = (props) => {
   let col = props.farbe;
   //Textfarbe wird ebenfalls über Props übergeben, damit sie zum Hintergrund passt (z.B. weiß auf dunklem Hintergrund, schwarz auf hellem Hintergrund)
   let textfarbe = props.textfarbe;
-  console.log(textfarbe);
   return (
-    <TouchableOpacity activOpacity={0.6} onPress={props.ziel}>
+    <TouchableOpacity activeOpacity={0.6} onPress={props.ziel}>
       <View style={{ ...styles.button, ...col }}>
         <Text style={{ ...styles.buttonText, ...textfarbe }}>
           {props.beschriftung}

@@ -33,12 +33,14 @@ const Tide = ({ navigation }) => {
 
   //hier wird das Array mit den Gezeiten aus dem Web geholt
   useEffect(() => {
+    const controller = new AbortController();
     let wann = format(date, 'yyyy-MM-dd');
-    //console.log(wann + ' ' + date);
+
     axios
       .get(
         //`http://19:168.178.102/SyltApp/php/tide.php?date=${wann}&ort=${ort}`
         `https://www.rundf.eu/php/tide.php?date=${wann}&ort=${ort}`,
+        { signal: controller.signal },
       )
       .then((response) => {
         let array = response.data;
@@ -51,8 +53,16 @@ const Tide = ({ navigation }) => {
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error);
+        if (axios.isCancel(error)) {
+          console.log('Request canceled', error.message);
+        } else {
+          console.log(error);
+        }
       });
+
+    return () => {
+      controller.abort();
+    };
   }, [date, ort]);
   //********************************************für den Datepicker
   const onChange = (event, selectedDate) => {
@@ -96,7 +106,6 @@ const Tide = ({ navigation }) => {
       label: 'Rantum Hafen',
       value: 5,
     },
-    ,
     {
       label: 'Hörnum Westseite',
       value: 6,
@@ -289,7 +298,7 @@ function createStyles(colors) {
       borderWidth: 1,
     },
     pickerStyle: {
-      backgroundColor: 'colors.bg', // Nutzt die Hintergrundfarbe aus dem Theme
+      backgroundColor: colors.bg, // Nutzt die Hintergrundfarbe aus dem Theme
       borderWidth: 1,
       borderColor: colors.border, // Nutzt die Randfarbe aus dem Theme
       borderRadius: 5,

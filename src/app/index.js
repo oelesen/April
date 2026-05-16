@@ -69,7 +69,6 @@ export default Index;
 function createStyles(colors) {
   return StyleSheet.create({
     container: {
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
