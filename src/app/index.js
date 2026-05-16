@@ -1,6 +1,12 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, View } from 'react-native';
+import {
+  ImageBackground,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 // WICHTIG: Importiere den Hook aus deinem ThemeContext um die Farben zu nutzen
 import Schalter from '../components/schalter';
 import { useTheme } from '../theme/ThemeContext';
@@ -22,22 +28,38 @@ const Index = () => {
       style={styles.bildcontainer}
       resizeMode="contain"
     >
-      <View style={styles.container}>
-        <View>
-          <Link href="/themenwahl" asChild>
-            <Pressable>
-              <Schalter beschriftung={'Themenwahl'} />
-            </Pressable>
-          </Link>
+      <ScrollView>
+        <View style={styles.container}>
+          <View>
+            <Link href="/themenwahl" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Themenwahl'} />
+              </Pressable>
+            </Link>
+          </View>
+          <View>
+            <Link href="/wechselkurs" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Wechselkurs'} />
+              </Pressable>
+            </Link>
+          </View>
+          <View>
+            <Link href="/tide" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Gezeiten'} />
+              </Pressable>
+            </Link>
+          </View>
+          <View>
+            <Link href="/basis" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Basis'} />
+              </Pressable>
+            </Link>
+          </View>
         </View>
-        <View>
-          <Link href="/wechselkurs" asChild>
-            <Pressable>
-              <Schalter beschriftung={'Wechselkurs'} />
-            </Pressable>
-          </Link>
-        </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 };

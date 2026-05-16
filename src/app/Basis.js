@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
+
 import { useTheme } from '../theme/ThemeContext';
 
 const Basis = () => {
   const { colors } = useTheme();
   const styles = createStyles(colors);
+
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Basis</Text>
     </View>
   );
@@ -14,5 +16,9 @@ const Basis = () => {
 export default Basis;
 
 function createStyles(colors) {
-  return StyleSheet.create({});
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+  });
 }

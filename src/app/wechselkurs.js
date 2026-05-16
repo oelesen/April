@@ -107,6 +107,7 @@ const Wechselkurs = () => {
       </View>
     );
   }
+  //////////////////////////////////////////////////////////////////////////////
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -194,6 +195,11 @@ function createStyles(colors) {
       flexGrow: 1,
       justifyContent: 'center',
       backgroundColor: colors.bg,
+    },
+    bildcontainer: {
+      height: '100%',
+      width: '100%',
+      //backgroundColor: colors.bgdark, // Nutzt die bgdark Farbe aus dem Theme für den Hintergrund der Bildkomponente
     },
     container: {
       padding: 25,

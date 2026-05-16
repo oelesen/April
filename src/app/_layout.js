@@ -51,6 +51,8 @@ function AppWrapper() {
         <Stack.Screen name="index" options={{ title: 'Home' }} />
         <Stack.Screen name="themenwahl" options={{ title: 'Dark / Light' }} />
         <Stack.Screen name="wechselkurs" options={{ title: 'Krone / Euro' }} />
+        <Stack.Screen name="tide" options={{ title: 'Tidenkalender' }} />
+        <Stack.Screen name="basis" options={{ title: 'Basis' }} />
       </Stack>
     </>
   );

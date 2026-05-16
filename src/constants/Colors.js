@@ -14,6 +14,8 @@ export default {
     warning: 'hsl(52 59% 44%)',
     success: 'hsl(152 45% 49%)',
     info: 'hsl(217 80% 68%)',
+    weiss: 'hsl(222 56% 96%)',
+    rot: 'hsl(0 100% 50%)',
   },
   light: {
     bgdarkoriginal: 'hsl(227 100% 95%)',
@@ -33,5 +35,7 @@ export default {
     warning: 'hsl(53 100% 15%)',
     success: 'hsl(161 100% 17%)',
     info: 'hsl(217 54% 44%)',
+    weiss: 'hsl(222, 56%, 96%)',
+    rot: 'hsl(0 100% 50%)',
   },
 };

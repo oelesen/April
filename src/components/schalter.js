@@ -23,7 +23,7 @@ function createStyles(colors) {
       marginVertical: 8,
       borderRadius: 10,
       borderWidth: 0.8,
-      borderColor: colors.text,
+      borderColor: colors.weiß,
       borderStyle: 'solid',
       shadowColor: colors.border,
       shadowOpacity: 0.9,
