@@ -52,7 +52,7 @@ const CardTide = (props) => {
     const year = date.getFullYear();
 
     // Letzter Sonntag im März
-    const march31 = new Date(year, 2, 31);
+    //const march31 = new Date(year, 2, 31);
     let startDst = new Date(year, 2, 31);
     while (startDst.getDay() !== 0) {
       startDst.setDate(startDst.getDate() - 1);
@@ -61,7 +61,7 @@ const CardTide = (props) => {
     startDst.setHours(3, 0, 0);
 
     // Letzter Sonntag im Oktober
-    const oct31 = new Date(year, 9, 31);
+    //const oct31 = new Date(year, 9, 31);
     let endDst = new Date(year, 9, 31);
     while (endDst.getDay() !== 0) {
       endDst.setDate(endDst.getDate() - 1);

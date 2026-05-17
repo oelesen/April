@@ -1,5 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeContext';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const Schalter = (props) => {
   const { colors } = useTheme();
@@ -15,11 +17,12 @@ function createStyles(colors) {
   return StyleSheet.create({
     button: {
       justifyContent: 'center',
-      alignContent: 'center',
+      alignItems: 'center',
+      width: screenWidth * 0.9,
       backgroundColor: colors.primary,
       paddingVertical: 5,
-      paddingHorizontal: 50,
-      marginHorizontal: 30,
+      paddingHorizontal: 10,
+      marginHorizontal: 0,
       marginVertical: 8,
       borderRadius: 10,
       borderWidth: 0.8,

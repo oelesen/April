@@ -6,10 +6,10 @@ import {
   ActivityIndicator,
   ImageBackground,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
