@@ -53,6 +53,14 @@ function AppWrapper() {
         <Stack.Screen name="wechselkurs" options={{ title: 'Krone / Euro' }} />
         <Stack.Screen name="tide" options={{ title: 'Tidenkalender' }} />
         <Stack.Screen name="basis" options={{ title: 'Basis' }} />
+        <Stack.Screen name="apo" options={{ title: 'Apotheke' }} />
+        <Stack.Screen
+          name="map"
+          options={{
+            headerTitle: 'Google Maps',
+            presentation: 'modal',
+          }}
+        />
       </Stack>
     </>
   );

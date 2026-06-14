@@ -58,6 +58,13 @@ const Index = () => {
               </Pressable>
             </Link>
           </View>
+          <View>
+            <Link href="/apo" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Apotheke'} />
+              </Pressable>
+            </Link>
+          </View>
         </View>
       </ScrollView>
     </ImageBackground>
