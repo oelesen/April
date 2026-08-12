@@ -18,27 +18,16 @@ export const init = async () => {
     // ACHTUNG: Nur zum Fixen! Löscht die alte Tabelle und erstellt sie neu.
     // Das löscht alle alten Testdaten auf dem Handy!
     //braucht nur aktiviert zu werden, wenn Probleme mit alter, geänderter Datenbank aufgetreten sind
-
     //await database.execAsync('DROP TABLE IF EXISTS datenbank;');
-    //await database.execAsync('DROP TABLE IF EXISTS thema;');
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // execAsync is used for one-off commands like creating tables
-    //datenbank enthält die Müll-Daten
     await database.execAsync(`
       CREATE TABLE IF NOT EXISTS datenbank (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         ort TEXT NOT NULL, 
         grau TEXT NOT NULL, 
-        gruen TEXT NOT NULL
-      );
-    `);
-
-    // New table: thema, enthält den Speicher für das gewählte Theme
-    await database.execAsync(`
-      CREATE TABLE IF NOT EXISTS thema (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        theme TEXT NOT NULL
+        gruen TEXT NOT NULL,
       );
     `);
     console.log('Database initialized successfully');
@@ -47,70 +36,7 @@ export const init = async () => {
     throw error;
   }
 };
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Fügt ein neues Thema in die Datenbank ein
-export const insertThema = async (theme) => {
-  const database = await getDb();
-  try {
-    // runAsync is used for INSERT, UPDATE, DELETE
-    const result = await database.runAsync(
-      'INSERT INTO thema (theme) VALUES (?);',
-      [theme],
-    );
-    return result;
-  } catch (error) {
-    console.error('Insert Thema error:', error);
-    throw error;
-  }
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Holt das aktuell gespeicherte Thema aus der Datenbank ab
-export const fetchThema = async () => {
-  const database = await getDb();
-  try {
-    // getAllAsync returns an array of all rows found
-    const allRows = await database.getAllAsync('SELECT * FROM thema LIMIT 1');
-    console.log('Fetch Thema result:', allRows[0]);
-    return allRows[0] ? allRows[0].theme : null;
-  } catch (error) {
-    console.error('Fetch Thema error:', error);
-    throw error;
-  }
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Löscht den Eintrag für das Thema aus der Datenbank
-export const deleteThema = async () => {
-  const database = await getDb();
-  try {
-    const result = await database.runAsync('DELETE FROM thema');
-    return result;
-  } catch (error) {
-    console.error('Delete Thema error:', error);
-    throw error;
-  }
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Aktualisiert das bestehende Thema in der Datenbank
-export const updateThema = async (theme) => {
-  const database = await getDb();
-  try {
-    const result = await database.runAsync(
-      'UPDATE thema SET theme = ? WHERE id = (SELECT id FROM thema LIMIT 1)',
-      [theme],
-    );
-    return result;
-  } catch (error) {
-    console.error('Update Thema error:', error);
-    throw error;
-  }
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Fügt neue Daten zur Tabelle 'datenbank' hinzu
 export const insertDatenbank = async (ort, grau, gruen) => {
   const database = await getDb();
   try {
@@ -125,9 +51,7 @@ export const insertDatenbank = async (ort, grau, gruen) => {
     throw error;
   }
 };
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Liest alle Daten aus der Tabelle 'datenbank'
 export const fetchDatenbank = async () => {
   const database = await getDb();
   try {
@@ -139,9 +63,7 @@ export const fetchDatenbank = async () => {
     throw error;
   }
 };
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Löscht alle Daten aus der Tabelle 'datenbank'
 export const deleteDatenbank = async () => {
   const database = await getDb();
   try {
@@ -152,9 +74,7 @@ export const deleteDatenbank = async () => {
     throw error;
   }
 };
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Aktualisiert die Daten in der Tabelle 'datenbank'
 export const updateDatenbank = async (ort, grau, gruen) => {
   const database = await getDb();
   try {

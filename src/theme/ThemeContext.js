@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react'; // Importiere React-Grundfunktionen
+import { createContext, useContext, useState, useEffect } from 'react'; // Importiere React-Grundfunktionen
 import { useColorScheme } from 'react-native'; // Importiere die System-Abfrage von React Native
 import colors from '../constants/Colors'; // Importiere deine Farb-Konstante
+import { fetchThema, updateThema } from '../data/db';
 
 // Erstelle den Context, in dem wir die Farben und die Steuerung speichern
 const ThemeContext = createContext();
@@ -11,6 +12,22 @@ export const ThemeProvider = ({ children }) => {
 
   // Der State speichert die manuelle Wahl des Nutzers: 'light', 'dark' oder 'system'
   const [userTheme, setUserTheme] = useState('system');
+
+  // Effekt zum Laden und Speichern des Themes in der Datenbank
+  useEffect(() => {
+    const loadTheme = async () => {
+      const savedTheme = await fetchThema();
+      if (savedTheme) {
+        // Wenn ein Thema in der DB gefunden wurde, setzen wir es als Standard.
+        // Da die DB nur 'light' oder 'dark' speichert, ignorieren wir 'system'
+        // aus der DB, falls es dort nicht explizit vorhanden ist.
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          setUserTheme(savedTheme);
+        }
+      }
+    };
+    loadTheme();
+  }, []);
 
   // Berechne das aktive Theme-Label ('light' oder 'dark')
   // Wenn 'system' gewählt ist, nimm die System-Einstellung, ansonsten die User-Wahl
@@ -24,9 +41,10 @@ export const ThemeProvider = ({ children }) => {
   // Erstelle eine Hilfsvariable, um einfach prüfen zu können, ob wir im Dark Mode sind
   const isDark = activeThemeName === 'dark';
 
-  // Funktion, um das Theme des Nutzers zu ändern
-  const setTheme = (newTheme) => {
-    setUserTheme(newTheme); // Aktualisiert den State
+  // Funktion, um das Theme des Nutzers zu ändern und in der DB zu speichern
+  const setTheme = async (newTheme) => {
+    setUserTheme(newTheme);
+    await updateThema(newTheme);
   };
 
   // Wir geben alles über den Provider nach unten an die App weiter

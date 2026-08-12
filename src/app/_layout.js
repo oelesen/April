@@ -3,7 +3,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar'; // Importiere StatusBar für die Icon-Farben
 import { useEffect } from 'react';
-import { fetchDatenbank, init, insertDatenbank } from '../data/db';
+import {
+  fetchDatenbank,
+  init,
+  insertDatenbank,
+  fetchThema,
+  updateThema,
+} from '../data/db';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext'; // Importiere unseren neuen Provider & Hook
 
 /**
@@ -107,12 +113,19 @@ export default function RootLayout() {
         // Falls leer: Erst einfügen
         if (dbResult.length === 0) {
           console.log('Datenbank ist leer, setze Anfangswerte...');
-          // Hier fügst du deine Standarddaten ein
           await insertDatenbank('Tinnum', 'grau2', 'gruen4');
           console.log('Anfangswerte erfolgreich eingefügt.');
 
           // Erneut laden, damit die Variable dbResult aktuell ist
           dbResult = await fetchDatenbank();
+        }
+
+        // Thema prüfen und ggf. initialisieren
+        let currentTheme = await fetchThema();
+        console.log('Aktuelles Theme:', currentTheme);
+        if (!currentTheme) {
+          console.log('Kein Theme in der DB gefunden, setze Standardwert...');
+          await updateThema('light');
         }
       } catch (error) {
         console.error('Fehler beim Setup der Datenbank:', error);

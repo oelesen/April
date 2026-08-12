@@ -17,6 +17,7 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isMounted = React.useRef(true);
 
   /////////////////////////////////////////////////////////////////////////////
   //am Anfang wird die Erelaubnis zur Lokalisation geprüft
@@ -35,26 +36,37 @@ const Map = () => {
         }
 
         if (finalStatus !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          setIsLoading(false);
+          if (isMounted.current) {
+            setErrorMsg('Permission to access location was denied');
+            setIsLoading(false);
+          }
           return;
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+        if (isMounted.current) {
+          setLocation(location);
 
-        setMapRegion({
-          longitude: location.coords.longitude,
-          latitude: location.coords.latitude,
-          longitudeDelta: 0.0922,
-          latitudeDelta: 0.0421,
-        });
+          setMapRegion({
+            longitude: location.coords.longitude,
+            latitude: location.coords.latitude,
+            longitudeDelta: 0.0922,
+            latitudeDelta: 0.0421,
+          });
+        }
       } catch (e) {
-        setErrorMsg('Error fetching location');
+        if (isMounted.current) {
+          setErrorMsg('Error fetching location');
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
       }
     })();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   ////////////////////////////////////////////////////////////////////////////////////////////
