@@ -65,6 +65,13 @@ const Index = () => {
               </Pressable>
             </Link>
           </View>
+          <View>
+            <Link href="/scn" asChild>
+              <Pressable>
+                <Schalter beschriftung={'SCN'} />
+              </Pressable>
+            </Link>
+          </View>
         </View>
       </ScrollView>
     </ImageBackground>

@@ -60,6 +60,7 @@ function AppWrapper() {
         <Stack.Screen name="tide" options={{ title: 'Tidenkalender' }} />
         <Stack.Screen name="basis" options={{ title: 'Basis' }} />
         <Stack.Screen name="apo" options={{ title: 'Apotheke' }} />
+        <Stack.Screen name="scn" options={{ title: 'SCN' }} />
         <Stack.Screen
           name="map"
           options={{

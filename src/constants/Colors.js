@@ -16,6 +16,7 @@ export default {
     info: 'hsl(217 80% 68%)',
     weiss: 'hsl(222 56% 96%)',
     rot: 'hsl(0 100% 50%)',
+    scn: 'hsl(229 100% 80%)',
   },
   light: {
     bgdarkoriginal: 'hsl(227 100% 95%)',
@@ -37,5 +38,6 @@ export default {
     info: 'hsl(217 54% 44%)',
     weiss: 'hsl(222, 56%, 96%)',
     rot: 'hsl(0 100% 50%)',
+    scn: '#ffff99',
   },
 };
