@@ -71,6 +71,11 @@ const Index = () => {
                 <Schalter beschriftung={'SCN'} />
               </Pressable>
             </Link>
+            <Link href="/seewetterbericht" asChild>
+              <Pressable>
+                <Schalter beschriftung={'Seewetterbericht'} />
+              </Pressable>
+            </Link>
           </View>
         </View>
       </ScrollView>

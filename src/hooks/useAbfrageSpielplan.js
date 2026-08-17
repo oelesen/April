@@ -1,6 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
+
+// Auf Modulebene verschoben: hängen von nichts Dynamischem ab (keine Props/State),
+// dadurch bleiben es stabile Referenzen und sie tauchen nicht mehr als
+// "missing dependency" von useCallback auf.
+const spiele = {
+  method: 'GET',
+  url: 'https://www.rundf.eu/scraping/newGames.json',
+  headers: {
+    'Cache-Control': 'no-cache',
+  },
+};
+const spieleLetzte = {
+  method: 'GET',
+  url: 'https://www.rundf.eu/scraping/spieleLetzte.json',
+  headers: {
+    'Cache-Control': 'no-cache',
+  },
+};
 
 const useAbfrageSpielplan = (endpoint, query) => {
   const [neue, setNeue] = useState([]);
@@ -10,22 +28,7 @@ const useAbfrageSpielplan = (endpoint, query) => {
   const [error, setError] = useState(null);
   const isFocused = useIsFocused();
 
-  const spiele = {
-    method: 'GET',
-    url: 'https://www.rundf.eu/scraping/newGames.json',
-    headers: {
-      'Cache-Control': 'no-cache',
-    },
-  };
-  const spieleLetzte = {
-    method: 'GET',
-    url: 'https://www.rundf.eu/scraping/spieleLetzte.json',
-    headers: {
-      'Cache-Control': 'no-cache',
-    },
-  };
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       //////////////////////////////////////////////////////////////////
@@ -62,18 +65,19 @@ const useAbfrageSpielplan = (endpoint, query) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
   //Beim ersten Aufruf der Seite:
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // 2. Jedes Mal beim Screen-Fokus
   useEffect(() => {
     if (isFocused) {
       fetchData();
     }
-  }, [isFocused]);
+  }, [isFocused, fetchData]);
 
   return { alte, neue, update, isLoading, error };
 };

@@ -9,19 +9,19 @@ const Truppe = (props) => {
 
   // Überprüfung spezifischer Vereinsnamen und Rückgabe modifizierter Namen
   if (name.includes('Dörpum')) {
-    return 'Dörpum II' + '\n' + ''; // Vereinfachter Name für SV Dörpum II
+    return 'Dörpum II'; // Vereinfachter Name für SV Dörpum II
   }
   if (name.includes('Süderlügum')) {
-    return 'Süderlügum' + '\n' + ''; // Übersetzung und Aufteilung des Namens
+    return 'Süderlügum'; // Übersetzung und Aufteilung des Namens
   }
   if (name.includes('Mitte')) {
-    return 'Mitte NF II' + '\n' + ''; // Aufteilung in zwei Zeilen
+    return 'Mitte NF II'; // Aufteilung in zwei Zeilen
   }
   if (name.includes('Norddörfer')) {
     return 'Norddörfer' + '\n' + 'nur der SCN'; // Spezifische Anmerkung für SCN
   }
   if (name.includes('Drelsdorf')) {
-    return 'Drelsdorf' + '\n' + ''; // Vereinfachung des Namens
+    return 'Drelsdorf'; // Vereinfachung des Namens
   }
   if (name.includes('Wiedingh')) {
     return 'Wiedingh.' + '\n' + 'Emmelsbüll'; // Abkürzung und Aufteilung
@@ -30,22 +30,22 @@ const Truppe = (props) => {
     return 'Ellingstedt' + '\n' + 'Silberstedt'; // Vereinfachter Name
   }
   if (name.includes('Husum')) {
-    return 'Husum II' + '\n' + ''; // Vereinfachter Name
+    return 'Husum II'; // Vereinfachter Name
   }
   if (name.includes('Stedesand')) {
-    return 'Stedesand' + '\n' + ''; // Rückgabe des Originalnamens
+    return 'Stedesand'; // Rückgabe des Originalnamens
   }
   if (name.includes('Klixbüll')) {
-    return 'Klixbüll' + '\n' + ''; // Aufteilung des Namens
+    return 'Klixbüll'; // Aufteilung des Namens
   }
   if (name.includes('Nordau')) {
-    return 'Nordau II' + '\n' + ''; // Aufteilung in zwei Zeilen
+    return 'Nordau II'; // Aufteilung in zwei Zeilen
   }
   if (name.includes('Löwenstedt')) {
-    return 'Löwenstedt III' + '\n' + ''; // Vereinfachter Name
+    return 'Löwenstedt III'; // Vereinfachter Name
   }
   if (name.includes('Arlewatt')) {
-    return 'Arlewatt II' + '\n' + ''; // Vereinfachter Name
+    return 'Arlewatt II'; // Vereinfachter Name
   }
   if (name === 'SPIELFREI') {
     return 'SPIELFREI';

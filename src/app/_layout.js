@@ -1,8 +1,10 @@
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar'; // Importiere StatusBar für die Icon-Farben
 import { useEffect } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
+import { Pressable } from 'react-native';
 import {
   fetchDatenbank,
   init,
@@ -31,8 +33,8 @@ function AppWrapper() {
         // Wir fügen 'animated' hinzu, damit der Übergang nicht so abrupt geschieht
         animated={true}
         // Wir stellen sicher, dass die Transparenz korrekt ist, damit die Icons nicht "verschwinden"
-        translucent={true}
-        backgroundColor="transparent"
+        translucent={false}
+        backgroundColor={colors.bgdark}
       />
 
       <Stack
@@ -60,13 +62,46 @@ function AppWrapper() {
         <Stack.Screen name="tide" options={{ title: 'Tidenkalender' }} />
         <Stack.Screen name="basis" options={{ title: 'Basis' }} />
         <Stack.Screen name="apo" options={{ title: 'Apotheke' }} />
-        <Stack.Screen name="scn" options={{ title: 'SCN' }} />
+        <Stack.Screen
+          name="scn"
+          options={{
+            title: 'SCN',
+            headerRight: () => (
+              <Pressable onPress={() => router.push('/scnSpielplan')}>
+                <FontAwesome
+                  name="calendar"
+                  size={20}
+                  color={colors.text}
+                  backgroundColor={colors.scn}
+                  padding={7}
+                  borderRadius={50}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="scnSpielplan"
+          options={{
+            headerTitle: 'Spielplan SCN',
+            presentation: 'modal',
+            // headerRight: () => (
+            //   <Pressable onPress={() => router.push('/airportCam')}>
+            //     <FontAwesome name="camera" size={24} color={Colors.dubl} />
+            //   </Pressable>
+            // ),
+          }}
+        />
         <Stack.Screen
           name="map"
           options={{
             headerTitle: 'Google Maps',
             presentation: 'modal',
           }}
+        />
+        <Stack.Screen
+          name="seewetterbericht"
+          options={{ title: 'Seewetterbericht' }}
         />
       </Stack>
     </>

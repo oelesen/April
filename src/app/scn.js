@@ -227,6 +227,7 @@ function createStyles(colors) {
       // Layout einer normalen Tabellenzeile
       flexDirection: 'row',
       marginTop: 3,
+      marginBottom: 3,
       paddingTop: 2,
       paddingBottom: 2,
       backgroundColor: colors.bglight,
@@ -235,6 +236,9 @@ function createStyles(colors) {
       borderColor: colors.textmuted,
       borderStyle: 'solid',
       width: '100%',
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     reiheOben: {
       // Layout der Kopfzeile (Spaltentitel)
