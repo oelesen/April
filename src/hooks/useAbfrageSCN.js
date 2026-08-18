@@ -39,7 +39,8 @@ const useAbfrageSCN = (endpoint, query) => {
       setUpdate(response.data[0].timestamp);
 
       // Set only the standings rows to FlatList, excluding the metadata record at response.data[0]
-      setData(response.data.slice(1));
+      setData(response.data);
+      //console.log(response.data);
     } catch (error) {
       // Fehler (z. B. kein Netzwerk, Server nicht erreichbar) im State speichern,
       // damit er in der UI angezeigt werden kann

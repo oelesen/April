@@ -21,7 +21,7 @@ const SCN = () => {
   // Daten, Ladezustand, Fehler und die refetch-Funktion aus dem Custom Hook
   const { data, update, isLoading, error, refetch } = useAbfrageSCN();
   ///////////////////////////////////////////////////////////////////////////////////////
-
+  //console.log(data);
   // Prüft, ob dieser Screen gerade im Fokus ist (z. B. beim Wechsel zwischen Tabs)
   const isFocused = useIsFocused();
 

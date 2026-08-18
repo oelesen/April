@@ -14,7 +14,7 @@ const parseTimestamp = (timestamp) => {
     const date = new Date(converted);
     if (isNaN(date.getTime())) return new Date(NaN);
     return date;
-  } catch (e) {
+  } catch {
     return new Date(NaN);
   }
 };
@@ -25,7 +25,12 @@ const ScnSpielplan = () => {
   const { alte, neue, update, isLoading, error } = useAbfrageSpielplan();
   const [auswahl, setAuswahl] = useState('zukunft'); //der Auswahlbutton
   //let wann = update; aus spielplan.json
-  let wann = update ? format(parseTimestamp(update), 'dd.MM.yyyy HH:mm') : ''; //aus spiele.json
+  let wann = update
+    ? parseTimestamp(update) instanceof Date &&
+      !isNaN(parseTimestamp(update).getTime())
+      ? format(parseTimestamp(update), 'dd.MM.yyyy HH:mm')
+      : ''
+    : ''; //aus spiele.json
   //const heute = format(new Date(), 'dd.MM.yyyy');
   //console.log(data.spiele);
   console.log(alte);
