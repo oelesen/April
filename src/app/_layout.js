@@ -13,6 +13,7 @@ import {
   updateThema,
 } from '../data/db';
 import { ThemeProvider, useTheme } from '../theme/ThemeContext'; // Importiere unseren neuen Provider & Hook
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 /**
  * ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,10 +189,13 @@ export default function RootLayout() {
   }
 
   return (
-    // Wir umschließen die gesamte App mit dem ThemeProvider.
-    // Dadurch hat die AppWrapper Komponente Zugriff auf den Theme-Status.
-    <ThemeProvider>
-      <AppWrapper />
-    </ThemeProvider>
+    // SafeAreaProvider ganz außen, damit useSafeAreaInsets() überall in der App
+    // (z.B. in tanken.js) funktioniert.
+    // Innerhalb davon der ThemeProvider, damit AppWrapper Zugriff auf den Theme-Status hat.
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AppWrapper />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

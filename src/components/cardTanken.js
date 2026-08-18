@@ -37,9 +37,15 @@ const CardTanken = (props) => {
     <View style={styles.container}>
       <Image style={styles.image} source={bild} />
       <Text style={styles.buttonText}>{props.ort}</Text>
-      <Text style={styles.diesel}>{props.diesel}</Text>
-      <Text style={styles.normal}>{props.normale10}</Text>
-      <Text style={styles.super}>{props.supere5}</Text>
+      <Text style={styles.diesel} numberOfLines={1}>
+        {props.diesel}
+      </Text>
+      <Text style={styles.normal} numberOfLines={1}>
+        {props.normale10}
+      </Text>
+      <Text style={styles.super} numberOfLines={1}>
+        {props.supere5}
+      </Text>
       <Text style={styles.buttonText}>{props.open}</Text>
     </View>
   );
@@ -50,11 +56,11 @@ export default CardTanken;
 function createStyles(colors) {
   return StyleSheet.create({
     container: {
+      width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
       padding: 5,
       marginTop: 2,
-      marginHorizontal: 5,
       marginBottom: 2,
       elevation: 6,
       borderRadius: 10,
@@ -74,7 +80,8 @@ function createStyles(colors) {
       backgroundColor: colors.bg, // Nutzt die bgdark Farbe aus dem Theme für den Hintergrund der Bildkomponente
     },
     diesel: {
-      paddingHorizontal: 15,
+      width: '80%',
+      paddingHorizontal: 4,
       fontFamily: 'roboto-bold',
       fontSize: 14,
       color: colors.weiss, // Nutzt die highlight Farbe aus dem Theme für den Text der Diesel-Komponente
@@ -82,7 +89,8 @@ function createStyles(colors) {
       textAlign: 'center',
     },
     normal: {
-      paddingHorizontal: 15,
+      width: '80%',
+      paddingHorizontal: 4,
       fontFamily: 'roboto-bold',
       fontSize: 14,
       color: colors.weiss, // Nutzt die highlight Farbe aus dem Theme für den Text der Diesel-Komponente
@@ -90,7 +98,8 @@ function createStyles(colors) {
       textAlign: 'center',
     },
     super: {
-      paddingHorizontal: 15,
+      width: '80%',
+      paddingHorizontal: 4,
       fontFamily: 'roboto-bold',
       fontSize: 14,
       color: colors.weiss, // Nutzt die highlight Farbe aus dem Theme für den Text der Diesel-Komponente

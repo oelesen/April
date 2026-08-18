@@ -10,14 +10,14 @@ import {
 import { useTheme } from '../theme/ThemeContext';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
-import { FontAwesome } from '@expo/vector-icons';
 import CardTanken from '../components/cardTanken';
-import CardLegende from '../components/cardLegende';
 import { format } from 'date-fns';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tanken = () => {
   const { colors } = useTheme();
-  const styles = createStyles(colors);
+  const insets = useSafeAreaInsets();
+  const styles = createStyles(colors, insets);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [daten, setDaten] = useState(undefined);
@@ -84,6 +84,7 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
         <ScrollView style={styles.full}>
           <View style={styles.tabelle}>
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -110,14 +111,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('41bd2134-96d2-479f-8c3f-eb6f98a769eb');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -144,14 +139,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('005056ba-7cb6-1ed2-bceb-76ac288c4d25');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -180,14 +169,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
             </Pressable>
           </View>
           <View style={styles.tabelle}>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('3da08d1f-96a0-420c-bf64-eda2b7af12df');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -214,14 +197,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('578ef404-6085-47e6-82f6-27a1fd8c89d8');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -248,14 +225,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('2c6664d4-7048-4e8e-9f03-128d73da39ca');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -284,14 +255,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
             </Pressable>
           </View>
           <View style={styles.tabelle}>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('005056ba-7cb6-1ed2-bceb-8f2aa1df2d35');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -318,14 +283,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('471d173e-4615-461f-b6f6-0e0a6c260e0b');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -352,14 +311,8 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
                 }
               />
             </Pressable>
-            {/* <TouchableOpacity
-              activOpacity={0.6}
-              onPress={() => {
-                setModalWahl('7abe5a10-1d6e-408a-af77-f8553e2c68e2');
-                setModalVisible(!modalVisible);
-              }}
-            > */}
             <Pressable
+              style={styles.karte}
               onPress={() => {
                 router.push({
                   pathname: '/tankstellenModal',
@@ -390,9 +343,9 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
         </ScrollView>
         <View style={styles.footer}>
           <View style={styles.tabelle}>
-            <Text>Footer</Text>
-            <Text>Footer</Text>
-            <Text>Footer</Text>
+            <Text style={styles.diesel}>Diesel</Text>
+            <Text style={styles.e5}>Super</Text>
+            <Text style={styles.e10}>Normal</Text>
           </View>
         </View>
       </View>
@@ -401,7 +354,7 @@ c113f1f5-2a00-4a8c-a9c3-9d3beb69c99f Aral Tinnum
 
 export default Tanken;
 
-function createStyles(colors) {
+function createStyles(colors, insets) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -442,6 +395,9 @@ function createStyles(colors) {
       justifyContent: 'space-between',
       width: '100%',
     },
+    karte: {
+      width: '31%',
+    },
     text: {
       paddingHorizontal: 10,
       fontFamily: 'roboto-bold',
@@ -458,8 +414,41 @@ function createStyles(colors) {
       backgroundColor: colors.bglight, // Nutzt die hellere Hintergrundfarbe
       borderColor: colors.border, // Nutzt die Rahmenfarbe
       borderWidth: 1,
-      marginBottom: 5,
       marginTop: 5,
+      marginBottom: insets.bottom + 5,
+    },
+    diesel: {
+      flex: 1,
+      fontFamily: 'roboto-bold',
+      fontSize: 12,
+      color: colors.weiss,
+      backgroundColor: colors.primary,
+      textAlign: 'center',
+      paddingVertical: 6,
+      marginHorizontal: 3,
+      borderRadius: 10,
+    },
+    e5: {
+      flex: 1,
+      fontFamily: 'roboto-bold',
+      fontSize: 12,
+      color: colors.weiss,
+      backgroundColor: colors.border,
+      textAlign: 'center',
+      paddingVertical: 6,
+      marginHorizontal: 3,
+      borderRadius: 10,
+    },
+    e10: {
+      flex: 1,
+      fontFamily: 'roboto-bold',
+      fontSize: 12,
+      color: colors.weiss,
+      backgroundColor: colors.bordermuted,
+      textAlign: 'center',
+      paddingVertical: 6,
+      marginHorizontal: 3,
+      borderRadius: 10,
     },
   });
 }
