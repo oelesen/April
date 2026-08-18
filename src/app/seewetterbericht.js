@@ -142,20 +142,20 @@ const Seewetterbericht = () => {
 
   ///////////////////////////////////////////////////////////////////////////////////////
 
+  // Fehleranzeige, falls der API-Aufruf fehlgeschlagen ist
+  if (error) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+
   // Ladeanzeige: solange geladen wird oder noch keine (verwertbaren) Daten vorliegen
   if (isLoading || !data || data.length === 0) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={colors.bg} />
-      </View>
-    );
-  }
-
-  // Fehleranzeige, falls der API-Aufruf fehlgeschlagen ist
-  if (error) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{error.message}</Text>
       </View>
     );
   }

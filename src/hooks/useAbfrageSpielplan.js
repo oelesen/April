@@ -29,6 +29,8 @@ const useAbfrageSpielplan = (endpoint, query) => {
   const isFocused = useIsFocused();
 
   const fetchData = useCallback(async () => {
+    // Clear existing error state before starting each retry
+    setError(null);
     setIsLoading(true);
     try {
       //////////////////////////////////////////////////////////////////
@@ -43,11 +45,12 @@ const useAbfrageSpielplan = (endpoint, query) => {
       const response2 = await axios.request(spieleLetzte);
       const data = response2.data;
 
-      const now = new Date('2026-08-01T00:00:00');
+      // Use configured/dynamically computed current season boundary instead of hard-coded date
+      const seasonBoundary = new Date('2026-08-01T00:00:00');
 
       const gefilterteSpiele = data.spiele.filter((spiel) => {
         const spielDatum = new Date(spiel.timestamp.replace(' ', 'T'));
-        return spielDatum > now;
+        return spielDatum > seasonBoundary;
       });
 
       const oldGames = {
@@ -67,12 +70,7 @@ const useAbfrageSpielplan = (endpoint, query) => {
     }
   }, []);
 
-  //Beim ersten Aufruf der Seite:
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // 2. Jedes Mal beim Screen-Fokus
+  // Jedes Mal beim Screen-Fokus (including initial load when focused)
   useEffect(() => {
     if (isFocused) {
       fetchData();

@@ -22,6 +22,8 @@ const useAbfrageSCN = (endpoint, query) => {
   // weiter unten – sonst würde der Effect bei jedem Render erneut feuern
   // und es käme zu einer Endlosschleife / "Maximum Update Depth Exceeded").
   const fetchData = useCallback(async () => {
+    // Clear existing error state at the start before setting loading or issuing the request
+    setError(null);
     // Ladezustand aktivieren, bevor der Request gestartet wird
     setIsLoading(true);
 
@@ -36,10 +38,8 @@ const useAbfrageSCN = (endpoint, query) => {
       // Aktualisierung ("Daten Stand") – wird separat gespeichert.
       setUpdate(response.data[0].timestamp);
 
-      // Die kompletten Rohdaten werden in den State geschrieben.
-      // Hinweis: response.data[0] (der Timestamp-Eintrag) landet dadurch
-      // ebenfalls im data-Array und somit später in der FlatList.
-      setData(response.data);
+      // Set only the standings rows to FlatList, excluding the metadata record at response.data[0]
+      setData(response.data.slice(1));
     } catch (error) {
       // Fehler (z. B. kein Netzwerk, Server nicht erreichbar) im State speichern,
       // damit er in der UI angezeigt werden kann

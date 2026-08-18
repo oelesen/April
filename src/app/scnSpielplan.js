@@ -6,13 +6,26 @@ import { format, isAfter } from 'date-fns';
 import Truppe from '../components/scn_namen';
 import Knopf from '../components/knopf';
 
+// Shared timestamp parser: converts first space to 'T', validates Date, returns safe invalid result on failure
+const parseTimestamp = (timestamp) => {
+  if (!timestamp) return new Date(NaN);
+  try {
+    const converted = timestamp.replace(' ', 'T');
+    const date = new Date(converted);
+    if (isNaN(date.getTime())) return new Date(NaN);
+    return date;
+  } catch (e) {
+    return new Date(NaN);
+  }
+};
+
 const ScnSpielplan = () => {
   const { colors } = useTheme();
   const styles = createStyles(colors);
   const { alte, neue, update, isLoading, error } = useAbfrageSpielplan();
   const [auswahl, setAuswahl] = useState('zukunft'); //der Auswahlbutton
   //let wann = update; aus spielplan.json
-  let wann = update ? format(new Date(update), 'dd.MM.yyyy HH:mm') : ''; //aus spiele.json
+  let wann = update ? format(parseTimestamp(update), 'dd.MM.yyyy HH:mm') : ''; //aus spiele.json
   //const heute = format(new Date(), 'dd.MM.yyyy');
   //console.log(data.spiele);
   console.log(alte);
@@ -38,7 +51,7 @@ const ScnSpielplan = () => {
   const Ergebnis = (props) => {
     const heute = new Date();
     const erge = props.result;
-    const spielzeit = new Date(props.sz);
+    const spielzeit = parseTimestamp(props.sz);
     //console.log(moment(props.sz));
 
     if (isAfter(spielzeit, heute)) {

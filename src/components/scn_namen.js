@@ -50,6 +50,7 @@ const Truppe = (props) => {
   if (name === 'SPIELFREI') {
     return 'SPIELFREI';
   }
+  return name; // Return original name when no mapping matches
 };
 
 // Export der Komponente für die Verwendung in anderen Dateien

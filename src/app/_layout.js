@@ -103,6 +103,14 @@ function AppWrapper() {
           name="seewetterbericht"
           options={{ title: 'Seewetterbericht' }}
         />
+        <Stack.Screen name="tanken" options={{ title: 'Tanken' }} />
+        <Stack.Screen
+          name="tankstellenModal"
+          options={{
+            headerTitle: 'Tankstellen Details',
+            presentation: 'modal',
+          }}
+        />
       </Stack>
     </>
   );

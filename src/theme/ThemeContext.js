@@ -16,14 +16,19 @@ export const ThemeProvider = ({ children }) => {
   // Effekt zum Laden und Speichern des Themes in der Datenbank
   useEffect(() => {
     const loadTheme = async () => {
-      const savedTheme = await fetchThema();
-      if (savedTheme) {
-        // Wenn ein Thema in der DB gefunden wurde, setzen wir es als Standard.
-        // Da die DB nur 'light' oder 'dark' speichert, ignorieren wir 'system'
-        // aus der DB, falls es dort nicht explizit vorhanden ist.
-        if (savedTheme === 'light' || savedTheme === 'dark') {
-          setUserTheme(savedTheme);
+      try {
+        const savedTheme = await fetchThema();
+        if (savedTheme) {
+          // Wenn ein Thema in der DB gefunden wurde, setzen wir es als Standard.
+          // Da die DB nur 'light' oder 'dark' speichert, ignorieren wir 'system'
+          // aus der DB, falls es dort nicht explizit vorhanden ist.
+          if (savedTheme === 'light' || savedTheme === 'dark') {
+            setUserTheme(savedTheme);
+          }
         }
+      } catch (error) {
+        // Log error and retain default theme when database read fails
+        console.error('Failed to load theme from database:', error);
       }
     };
     loadTheme();
@@ -43,8 +48,16 @@ export const ThemeProvider = ({ children }) => {
 
   // Funktion, um das Theme des Nutzers zu ändern und in der DB zu speichern
   const setTheme = async (newTheme) => {
+    const previousTheme = userTheme;
     setUserTheme(newTheme);
-    await updateThema(newTheme);
+    try {
+      await updateThema(newTheme);
+    } catch (error) {
+      // Restore previous theme if persistence fails
+      setUserTheme(previousTheme);
+      console.error('Failed to update theme in database:', error);
+      throw error;
+    }
   };
 
   // Wir geben alles über den Provider nach unten an die App weiter

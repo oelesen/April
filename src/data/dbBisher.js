@@ -27,7 +27,7 @@ export const init = async () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         ort TEXT NOT NULL, 
         grau TEXT NOT NULL, 
-        gruen TEXT NOT NULL,
+        gruen TEXT NOT NULL
       );
     `);
     console.log('Database initialized successfully');
@@ -37,7 +37,7 @@ export const init = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const insertDatenbank = async (ort, grau, gruen) => {
+export const insertDatenbank = async (ort, grau, gruen, id) => {
   const database = await getDb();
   try {
     // runAsync is used for INSERT, UPDATE, DELETE
@@ -75,12 +75,12 @@ export const deleteDatenbank = async () => {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const updateDatenbank = async (ort, grau, gruen) => {
+export const updateDatenbank = async (ort, grau, gruen, id) => {
   const database = await getDb();
   try {
     const result = await database.runAsync(
-      'UPDATE datenbank SET ort = ?, grau = ?, gruen = ? WHERE id = (SELECT id FROM datenbank LIMIT 1)',
-      [ort, grau, gruen],
+      'UPDATE datenbank SET ort = ?, grau = ?, gruen = ? WHERE id = ?',
+      [ort, grau, gruen, id],
     );
     return result;
   } catch (error) {
