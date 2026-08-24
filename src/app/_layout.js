@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar'; // Importiere StatusBar für die Ic
 import { useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   fetchDatenbank,
   init,
@@ -112,6 +113,36 @@ function AppWrapper() {
             presentation: 'modal',
           }}
         />
+        <Stack.Screen
+          name="faehre"
+          options={{
+            title: 'Faehre',
+            headerRight: () => (
+              <Pressable onPress={() => router.push('/faehreCam')}>
+                <FontAwesome
+                  name="camera"
+                  size={20}
+                  color={colors.text}
+                  backgroundColor={colors.scn}
+                  padding={7}
+                  borderRadius={50}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="faehreCam"
+          options={{
+            headerTitle: 'Faehre Webcam',
+            presentation: 'modal',
+            // headerRight: () => (
+            //   <Pressable onPress={() => router.push('/airportCam')}>
+            //     <FontAwesome name="camera" size={24} color={Colors.dubl} />
+            //   </Pressable>
+            // ),
+          }}
+        />
       </Stack>
     </>
   );
@@ -189,13 +220,17 @@ export default function RootLayout() {
   }
 
   return (
-    // SafeAreaProvider ganz außen, damit useSafeAreaInsets() überall in der App
+    // GestureHandlerRootView muss ganz außen liegen, damit react-native-gesture-handler
+    // (und darauf aufbauend react-native-zoom-reanimated, z.B. in faehreCam.js) funktioniert.
+    // SafeAreaProvider danach, damit useSafeAreaInsets() überall in der App
     // (z.B. in tanken.js) funktioniert.
     // Innerhalb davon der ThemeProvider, damit AppWrapper Zugriff auf den Theme-Status hat.
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <AppWrapper />
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <AppWrapper />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

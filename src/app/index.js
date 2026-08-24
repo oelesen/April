@@ -81,6 +81,11 @@ const Index = () => {
                 <Schalter beschriftung={'Tanken'} />
               </Pressable>
             </Link>
+            <Link href="/faehre" asChild>
+              <Pressable>
+                <Schalter beschriftung={'FRS Sylt-Fähre'} />
+              </Pressable>
+            </Link>
           </View>
         </View>
       </ScrollView>
