@@ -85,7 +85,7 @@ const Faehre = () => {
   //in Zeichen erfolgt die eigentliche Ausgabe: Baustein "CardFaehre"
   //wird mit den notwendigen Infos gefüttert
   const Zeichen = () => {
-    if (loading === 'true') {
+    if (loading) {
       return (
         <View>
           <ActivityIndicator size="large" color={colors.primary} />

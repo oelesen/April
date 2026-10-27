@@ -118,7 +118,11 @@ function AppWrapper() {
           options={{
             title: 'Faehre',
             headerRight: () => (
-              <Pressable onPress={() => router.push('/faehreCam')}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Open ferry webcam"
+                onPress={() => router.push('/faehreCam')}
+              >
                 <FontAwesome
                   name="camera"
                   size={20}
